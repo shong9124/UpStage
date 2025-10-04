@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@drawable/shape_bottom_nav">
+
+    <LinearLayout
+        android:id="@+id/menu_recommend"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/menu_chat"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_backstage_able" />
+
+        <TextView
+            android:id="@+id/tv_recommend"
+            style="@style/ibm_plex_l3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="백스테이지"
+            android:textColor="@color/gray_b0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_chat"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@id/menu_my_page"
+        app:layout_constraintStart_toEndOf="@id/menu_recommend">
+
+        <ImageView
+            android:id="@+id/iv_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lamp_disable" />
+
+        <TextView
+            android:id="@+id/tv_chat"
+            style="@style/ibm_plex_l3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="발표 무대"
+            android:textColor="@color/gray_b0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_my_page"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/menu_chat">
+
+        <ImageView
+            android:id="@+id/iv_my_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_my_page_disabled" />
+
+        <TextView
+            android:id="@+id/tv_my_page"
+            style="@style/ibm_plex_l3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="대기실"
+            android:textColor="@color/gray_b0" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Primary & Secondary -->
+    <color name="primary">#201A74</color>
+    <color name="secondary">#3B7DDD</color>
+    <color name="s32">#32B7D6</color>
+    <color name="s42">#4254A6</color>
+    <color name="logo">#38357E</color>
+
+    <!-- Grayscale -->
+    <color name="gray_ff">#FFFFFF</color>
+    <color name="gray_e1">#E1E3E7</color>
+    <color name="gray_c9">#C9CACF</color>
+    <color name="gray_b0">#B0B2B7</color>
+    <color name="gray_97">#97999F</color>
+    <color name="gray_7f">#7F8186</color>
+    <color name="gray_66">#66686E</color>
+    <color name="gray_4d">#4D5056</color>
+    <color name="gray_35">#35373E</color>
+    <color name="gray_1c">#1C1F26</color>
+
+</resources>

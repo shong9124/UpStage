@@ -1,0 +1,88 @@
+[versions]
+agp = "8.4.0"
+glide = "4.16.0"
+fragmentKtx = "1.8.5"
+kotlin = "1.9.0"
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+lifecycleLivedataKtx = "2.8.7"
+material = "1.12.0"
+activity = "1.9.3"
+constraintlayout = "2.1.4"
+navigation = "2.8.5"
+
+okhttp = "4.12.0"
+poiOoxml = "5.2.3"
+retrofit2 = "2.11.0"
+jetbrainsKotlinJvm = "1.9.24"
+
+logger = "2.2.0"
+
+hilt = "2.52"
+ksp = "1.9.24-1.0.20"
+
+kotlinxCoroutinesCore = "1.8.1"
+
+javaxInject = "1"
+datastore = "1.0.0"
+
+[libraries]
+# AndroidX
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Navigation
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+androidx-navigation-safeargs = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
+
+# Network
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poiOoxml" }
+retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit2" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit2" }
+
+# Logger
+logger = { module = "com.orhanobut:logger", version.ref = "logger" }
+
+# DI
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
+
+# Coroutines
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+
+# DataStore
+datastore = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Test
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+googleKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+
+[bundles]
+network-bundle = ["okhttp", "logging-interceptor", "retrofit2", "converter-gson"]
+navigation-bundle = ["androidx-navigation-fragment", "androidx-navigation-ui"]
+androidx-bundle = ["androidx-core-ktx", "androidx-appcompat", "androidx-activity", "androidx-constraintlayout", "material"]
