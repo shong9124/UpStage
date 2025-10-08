@@ -6,23 +6,23 @@
     android:background="@drawable/shape_bottom_nav">
 
     <LinearLayout
-        android:id="@+id/menu_recommend"
+        android:id="@+id/menu_backstage"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@id/menu_chat"
+        app:layout_constraintEnd_toStartOf="@id/menu_presentation"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/iv_recommend"
+            android:id="@+id/iv_backstage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_backstage_able" />
+            android:src="@drawable/ic_backstage_disable" />
 
         <TextView
-            android:id="@+id/tv_recommend"
+            android:id="@+id/tv_backstage"
             style="@style/ibm_plex_l3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,23 +32,23 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/menu_chat"
+        android:id="@+id/menu_presentation"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@id/menu_my_page"
-        app:layout_constraintStart_toEndOf="@id/menu_recommend">
+        app:layout_constraintStart_toEndOf="@id/menu_backstage">
 
         <ImageView
-            android:id="@+id/iv_chat"
+            android:id="@+id/iv_presentation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:src="@drawable/ic_lamp_disable" />
 
         <TextView
-            android:id="@+id/tv_chat"
+            android:id="@+id/tv_presentation"
             style="@style/ibm_plex_l3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/menu_chat">
+        app:layout_constraintStart_toEndOf="@id/menu_presentation">
 
         <ImageView
             android:id="@+id/iv_my_page"

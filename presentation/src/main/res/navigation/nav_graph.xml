@@ -33,11 +33,35 @@
         android:name="com.capstone2.presentation.view.sign.SignUpCompleteFragment"
         android:label="fragment_sign_up_complete"
         app:route="sign_up_complete"
-        tools:layout="@layout/fragment_sign_up_complete" />
+        tools:layout="@layout/fragment_sign_up_complete" >
+        <action
+            android:id="@+id/action_signUpCompleteFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.capstone2.presentation.view.home.HomeFragment"
         android:label="fragment_home"
         app:route="home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_presentationFragment"
+            app:destination="@id/presentationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/presentationFragment"
+        android:name="com.capstone2.presentation.view.presentation.upload.PresentationFragment"
+        android:label="fragment_presentation"
+        app:route="presentation"
+        tools:layout="@layout/fragment_presentation" >
+        <action
+            android:id="@+id/action_presentationFragment_to_presentationResultFragment"
+            app:destination="@id/presentationResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/presentationResultFragment"
+        android:name="com.capstone2.presentation.view.presentation.result.PresentationResultFragment"
+        android:label="fragment_presentation_result"
+        app:route="presentation_result"
+        tools:layout="@layout/fragment_presentation_result" />
 </navigation>

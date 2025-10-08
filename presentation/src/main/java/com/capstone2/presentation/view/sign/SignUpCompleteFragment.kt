@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class SignUpCompleteFragment : BaseFragment<FragmentSignUpCompleteBinding>() {
     override fun initView() {
         binding.btnSignUpComplete.setOnClickListener {
-
+            moveToNext(NavigationRoutes.Home)
         }
     }
 

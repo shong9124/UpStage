@@ -114,6 +114,7 @@
         android:text="완료"
         android:textColor="@color/gray_ff"
         android:layout_margin="30dp"
+        app:layout_constraintDimensionRatio="1.5:1"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
