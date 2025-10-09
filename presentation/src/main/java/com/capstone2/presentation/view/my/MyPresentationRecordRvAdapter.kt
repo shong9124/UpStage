@@ -3,7 +3,7 @@ package com.capstone2.presentation.view.my
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.capstone2.domain.model.MyPresentationRecord
+import com.capstone2.domain.model.my.MyPresentationRecord
 import com.capstone2.presentation.databinding.ItemMyPresentationRecordBinding
 import com.capstone2.util.LoggerUtil
 

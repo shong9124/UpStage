@@ -3,7 +3,7 @@ package com.capstone2.presentation.view.my
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.capstone2.domain.model.MyPresentationRecord
+import com.capstone2.domain.model.my.MyPresentationRecord
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
