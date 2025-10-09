@@ -12,6 +12,7 @@ lifecycleLivedataKtx = "2.8.7"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.1.4"
+mpandroidchart = "v3.1.0"
 navigation = "2.8.5"
 
 okhttp = "4.12.0"
@@ -40,6 +41,9 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+# 차트 그리기
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version = "v3.1.0" }
+
 
 # Navigation
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
