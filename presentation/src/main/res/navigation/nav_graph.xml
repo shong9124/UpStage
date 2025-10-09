@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_homeFragment_to_presentationFragment"
             app:destination="@id/presentationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/presentationFragment"
@@ -57,11 +60,31 @@
         <action
             android:id="@+id/action_presentationFragment_to_presentationResultFragment"
             app:destination="@id/presentationResultFragment" />
+        <action
+            android:id="@+id/action_presentationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/presentationResultFragment"
         android:name="com.capstone2.presentation.view.presentation.result.PresentationResultFragment"
         android:label="fragment_presentation_result"
         app:route="presentation_result"
-        tools:layout="@layout/fragment_presentation_result" />
+        tools:layout="@layout/fragment_presentation_result" >
+        <action
+            android:id="@+id/action_presentationResultFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.capstone2.presentation.view.my.MyPageFragment"
+        android:label="fragment_my_page"
+        app:route="my_page"
+        tools:layout="@layout/fragment_my_page" >
+        <action
+            android:id="@+id/action_myPageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_presentationFragment"
+            app:destination="@id/presentationFragment" />
+    </fragment>
 </navigation>

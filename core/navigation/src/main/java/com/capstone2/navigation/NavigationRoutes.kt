@@ -7,4 +7,5 @@ sealed class NavigationRoutes(val route: String) {
     data object Home : NavigationRoutes("home")
     data object Presentation : NavigationRoutes("presentation")
     data object PresentationResult : NavigationRoutes("presentation_result")
+    data object MyPage : NavigationRoutes("my_page")
 }

@@ -13,7 +13,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
     override fun initView() {
 
         binding.btnLogin.setOnClickListener {
-
+            moveToNext(NavigationRoutes.Home)
         }
 
         binding.tvSignUp.setOnClickListener{

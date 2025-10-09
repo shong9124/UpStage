@@ -38,23 +38,23 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
         binding.bottomNav.ivPresentation.setImageResource(R.drawable.ic_lamp_able)
         binding.bottomNav.tvPresentation.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary))
 
-        binding.bottomNav.menuPresentation.setOnClickListener {
+        binding.bottomNav.menuBackstage.setOnClickListener {
             timeJob?.cancel()
             lifecycleScope.launch {
                 navigationManager.navigate(
-                    NavigationCommand.ToRoute(NavigationRoutes.Presentation)
+                    NavigationCommand.ToRoute(NavigationRoutes.Home)
                 )
             }
         }
 
-//        binding.bottomNav.menuMyPage.setOnClickListener {
-//            timeJob?.cancel()
-//            lifecycleScope.launch {
-//                navigationManager.navigate(
-//                    NavigationCommand.ToRoute(NavigationRoutes.MyPage)
-//                )
-//            }
-//        }
+        binding.bottomNav.menuMyPage.setOnClickListener {
+            timeJob?.cancel()
+            lifecycleScope.launch {
+                navigationManager.navigate(
+                    NavigationCommand.ToRoute(NavigationRoutes.MyPage)
+                )
+            }
+        }
     }
 
 }

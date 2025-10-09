@@ -19,6 +19,10 @@ import kotlinx.coroutines.launch
 class PresentationResultFragment : BaseFragment<FragmentPresentationResultBinding>() {
     override fun initView() {
 
+        binding.btnReturnToHome.setOnClickListener {
+            moveToNext(NavigationRoutes.Home)
+        }
+
         startAnimation()
 
     }
