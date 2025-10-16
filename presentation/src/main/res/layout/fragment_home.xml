@@ -34,6 +34,20 @@
         app:layout_constraintDimensionRatio="2.3:1" />
 
     <TextView
+        android:id="@+id/tv_my_presentation_nothing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아직 발표 연습을 하지 않았습니다."
+        android:textColor="@color/gray_c9"
+        android:textSize="12sp"
+        style="@style/ibm_plex_h1"
+
+        app:layout_constraintTop_toTopOf="@id/view_my_presentation"
+        app:layout_constraintStart_toStartOf="@id/view_my_presentation"
+        app:layout_constraintEnd_toEndOf="@id/view_my_presentation"
+        app:layout_constraintBottom_toBottomOf="@id/view_my_presentation" />
+
+    <TextView
         android:id="@+id/tv_recent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
