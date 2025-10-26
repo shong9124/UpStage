@@ -89,7 +89,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/shape_edit_text_type"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:hint="8글자 이상의 영문자와 숫자 혼합"
         android:textColorHint="@color/gray_c9"
         android:paddingHorizontal="16dp"

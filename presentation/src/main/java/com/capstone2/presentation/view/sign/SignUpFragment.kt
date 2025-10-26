@@ -58,6 +58,20 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
         }
     }
 
+    private fun validatePassword() {
+        val password = binding.etEnterPw.text.toString()
+        val pattern = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
+
+        if (pattern.matches(password)) {
+            binding.etEnterPw.setBackgroundResource(R.drawable.shape_edit_text_type_stroke)
+            binding.btnSubmit.isEnabled = true
+        } else {
+            binding.etEnterPw.setBackgroundResource(R.drawable.shape_edit_text_type_stroke_error)
+            binding.btnSubmit.isEnabled = false
+            Toast.makeText(requireContext(), "비밀번호는 8자 이상이며 영문자와 숫자를 포함해야 합니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun moveToNext(route: NavigationRoutes) {
         lifecycleScope.launch {
             navigationManager.navigate(
