@@ -36,8 +36,7 @@ class PresentationResultFragment : BaseFragment<FragmentPresentationResultBindin
                     binding.groupResult.visibility = View.VISIBLE
                     binding.groupFeedback1.visibility = View.VISIBLE
                     binding.groupFeedback2.visibility = View.VISIBLE
-                    binding.groupFeedback3.visibility = View.VISIBLE
-                    binding.groupFeedback4.visibility = View.VISIBLE
+                    binding.groupFeedbackResult.visibility = View.VISIBLE
                     binding.ivLogo.visibility = View.INVISIBLE
                     binding.root.setBackgroundResource(R.drawable.bg_result_score)
                     binding.groupStep1.visibility = View.INVISIBLE
