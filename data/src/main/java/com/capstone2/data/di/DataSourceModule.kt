@@ -2,6 +2,7 @@ package com.capstone2.data.di
 
 import com.capstone2.data.datasource.local.TokenLocalDataSource
 import com.capstone2.data.datasource.remote.AuthRemoteDataSource
+import com.capstone2.data.datasource.remote.AuthRemoteDataSourceImpl
 import com.ilgusu.data.datasource.local.TokenLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -22,6 +23,6 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindAuthRemoteDataSource(
-        authRemoteDataSource: AuthRemoteDataSource
+        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
     ): AuthRemoteDataSource
 }

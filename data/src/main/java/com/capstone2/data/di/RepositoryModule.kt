@@ -1,5 +1,6 @@
 package com.capstone2.data.di
 
+import com.capstone2.data.repository.AuthRepositoryImpl
 import com.capstone2.data.repository.TokenRepositoryImpl
 import com.capstone2.domain.repository.AuthRepository
 import com.capstone2.domain.repository.TokenRepository
@@ -19,5 +20,5 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindsAuthRepository(impl: AuthRepository): AuthRepository
+    abstract fun bindsAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 }
