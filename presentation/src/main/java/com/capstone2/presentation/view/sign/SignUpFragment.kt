@@ -2,17 +2,22 @@ package com.capstone2.presentation.view.sign
 
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
 import com.capstone2.presentation.base.BaseFragment
 import com.capstone2.presentation.databinding.FragmentSignUpBinding
+import com.capstone2.presentation.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
+
+    private val viewModel: SignUpViewModel by viewModels()
+
     override fun initView() {
         binding.btnSubmit.setOnClickListener {
             var allFilled = true
@@ -54,7 +59,29 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 }
                 return@setOnClickListener
             }
-            moveToNext(NavigationRoutes.SignUpComplete)
+            // viewModel
+            viewModel.signUp(
+                binding.etEnterEmail.text.toString(),
+                binding.etEnterPw.text.toString(),
+                binding.etName.text.toString()
+            )
+        }
+    }
+
+    override fun setObserver() {
+        super.setObserver()
+
+        viewModel.signUpState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val route = NavigationRoutes.SignUpComplete
+                    moveToNext(route)
+                }
+                is UiState.Error -> {
+                    showToast("회원가입에 실패했습니다.")
+                }
+            }
         }
     }
 
