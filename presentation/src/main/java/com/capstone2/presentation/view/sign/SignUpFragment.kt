@@ -10,6 +10,7 @@ import com.capstone2.presentation.R
 import com.capstone2.presentation.base.BaseFragment
 import com.capstone2.presentation.databinding.FragmentSignUpBinding
 import com.capstone2.presentation.util.UiState
+import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -60,6 +61,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                 return@setOnClickListener
             }
             // viewModel
+            LoggerUtil.d("회원 가입 시도")
             viewModel.signUp(
                 binding.etEnterEmail.text.toString(),
                 binding.etEnterPw.text.toString(),
