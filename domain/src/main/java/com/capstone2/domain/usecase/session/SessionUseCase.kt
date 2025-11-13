@@ -1,4 +1,4 @@
-package com.capstone2.domain.usecase.auth
+package com.capstone2.domain.usecase.session
 
 import com.capstone2.domain.model.session.CreateSession
 import com.capstone2.domain.repository.SessionRemoteRepository

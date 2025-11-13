@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone2.domain.model.session.CreateSession
-import com.capstone2.domain.usecase.auth.SessionUseCase
+import com.capstone2.domain.usecase.session.SessionUseCase
 import com.capstone2.presentation.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

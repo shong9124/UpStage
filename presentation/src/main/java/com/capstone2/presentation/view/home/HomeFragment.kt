@@ -2,6 +2,7 @@ package com.capstone2.presentation.view.home
 
 import android.graphics.Color
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone2.domain.model.home.RecentFeedback
@@ -10,6 +11,8 @@ import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
 import com.capstone2.presentation.base.BaseFragment
 import com.capstone2.presentation.databinding.FragmentHomeBinding
+import com.capstone2.presentation.util.UiState
+import com.capstone2.util.LoggerUtil
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -25,10 +28,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
     private var timeJob: Job? = null
     private lateinit var recentFeedbackAdapter: RecentFeedbackRvAdapter
+    private val viewModel : GetSessionListViewModel by viewModels()
 
     override fun initView() {
 
         setBottomNav()
+        viewModel.getSessionList()
 
         val items = listOf(
             RecentFeedback("발표속도가 너무 빨라요.", "#발표속도"),
@@ -62,12 +67,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         val scores = listOf(80, 75, 90, 85, 70, 95, 88)
         val dates = listOf("09-15", "09-16", "09-17", "09-18", "09-19", "09-20", "09-21")
 
-// 점수 → Entry 변환
+        // 점수 → Entry 변환
         val entries = scores.mapIndexed { index, score ->
             Entry(index.toFloat(), score.toFloat())
         }
 
-// 데이터셋 만들기
+        // 데이터셋 만들기
         val dataSet = LineDataSet(entries, "일주일 점수").apply {
             color = R.color.primary      // 선 색상
             lineWidth = 3f                           // 선 두께
@@ -84,11 +89,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             fillColor = R.color.primary
         }
 
-// 차트에 데이터 넣기
+        // 차트에 데이터 넣기
         val lineData = LineData(dataSet)
         binding.lcChart.data = lineData
 
-// X축 라벨 커스텀 (날짜 표시)
+        // X축 라벨 커스텀 (날짜 표시)
         binding.lcChart.xAxis.apply {
             valueFormatter = IndexAxisValueFormatter(dates)
             position = XAxis.XAxisPosition.BOTTOM
@@ -108,6 +113,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.lcChart.legend.isEnabled = false
         binding.lcChart.invalidate() // 차트 갱신
 
+    }
+
+    override fun setObserver() {
+        super.setObserver()
+
+        viewModel.getSessionState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    LoggerUtil.d("${it.data}")
+                }
+                is UiState.Error -> {
+                    showToast("정보 조회에 실패했습니다.")
+                }
+            }
+        }
     }
 
     private fun moveToNext(route: NavigationRoutes) {
