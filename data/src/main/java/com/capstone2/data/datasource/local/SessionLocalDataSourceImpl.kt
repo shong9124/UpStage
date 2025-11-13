@@ -3,28 +3,29 @@ package com.capstone2.data.datasource.local
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.capstone2.domain.model.TokenPreferences
+import com.capstone2.domain.model.SessionPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Named
 
-class TokenLocalDataSourceImpl @Inject constructor(
-    @Named("tokenDataStore")
+class SessionLocalDataSourceImpl @Inject constructor(
+    @Named("sessionDataStore")
     private val dataStore: DataStore<Preferences>
-) : TokenLocalDataSource {
+): SessionLocalDataSource {
 
     private object PreferencesKeys {
-        val ACCESS_TOKEN = stringPreferencesKey("access_token")
-        val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        val SESSION_ID = intPreferencesKey("session_id")
+        val SESSION_STATUS = stringPreferencesKey("session_status")
     }
 
-    override suspend fun saveTokens(accessToken: String, refreshToken: String): Result<Unit> {
+    override suspend fun saveSessionId(sessionId: Int, sessionStatus: String): Result<Unit> {
         return try {
             dataStore.edit { preferences ->
-                preferences[PreferencesKeys.ACCESS_TOKEN] = accessToken
-                preferences[PreferencesKeys.REFRESH_TOKEN] = refreshToken
+                preferences[PreferencesKeys.SESSION_ID] = sessionId
+                preferences[PreferencesKeys.SESSION_STATUS] = sessionStatus
             }
             Result.success(Unit)
         } catch (e: Exception) {
@@ -32,16 +33,16 @@ class TokenLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun getTokens(): Flow<TokenPreferences> {
+    override fun getSession(): Flow<SessionPreferences> {
         return dataStore.data.map { preferences ->
-            TokenPreferences(
-                accessToken = preferences[PreferencesKeys.ACCESS_TOKEN] ?: "",
-                refreshToken = preferences[PreferencesKeys.REFRESH_TOKEN] ?: "",
+            SessionPreferences(
+                sessionId = preferences[PreferencesKeys.SESSION_ID] ?: 0,
+                sessionStatus = preferences[PreferencesKeys.SESSION_STATUS] ?: ""
             )
         }
     }
 
-    override suspend fun clearTokens(): Result<Unit> {
+    override suspend fun clearSession(): Result<Unit> {
         return try {
             dataStore.edit { preferences ->
                 preferences.clear()
