@@ -179,14 +179,33 @@
                 android:paddingHorizontal="16dp"
                 style="@style/ibm_plex_h1"
                 android:textColor="@color/primary"
-                android:layout_marginHorizontal="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="20dp"
 
                 app:layout_constraintTop_toBottomOf="@id/tv_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_save"
 
                 tools:ignore="Autofill" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                style="@style/ibm_plex_h1"
+                android:background="@drawable/btn_round"
+                android:gravity="center"
+                android:text="저장"
+                android:textColor="@color/gray_ff"
+                app:layout_constraintDimensionRatio="1.5:1"
+                android:layout_marginEnd="30dp"
+
+                app:layout_constraintTop_toTopOf="@id/et_title"
+                app:layout_constraintBottom_toBottomOf="@id/et_title"
+                app:layout_constraintStart_toEndOf="@id/et_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_submit_p"

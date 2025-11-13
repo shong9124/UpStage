@@ -7,12 +7,15 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
 import com.capstone2.presentation.base.BaseFragment
 import com.capstone2.presentation.databinding.FragmentPresentationBinding
+import com.capstone2.presentation.util.UiState
+import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -22,7 +25,9 @@ import java.io.File
 class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
 
     private var timeJob: Job? = null
+    private var modelVersion = ""
     private val REQUEST_PERMISSION = 1001
+    private val sessionViewModel : SessionViewModel by viewModels()
 
     override fun initView() {
         setBottomNav()
@@ -33,21 +38,39 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
             binding.btnSpeech
         )
 
-        for (btn in btnList) {
+        val buttonMap = mapOf(
+            binding.btnPresentation to "PRESENTATION",
+            binding.btnSpeech to "SPEECH",
+            binding.btnInterview to "INTERVIEW"
+        )
+
+        for ((btn, version) in buttonMap) {
             btn.setOnClickListener {
-                btnList.forEach { it.isSelected = it == btn }
-                for (b in btnList) {
+                modelVersion = version
+
+                buttonMap.keys.forEach { it.isSelected = it == btn }
+                buttonMap.keys.forEach { b ->
                     b.background = if (b.isSelected)
                         ContextCompat.getDrawable(requireContext(), R.drawable.btn_round_selected)
                     else
                         ContextCompat.getDrawable(requireContext(), R.drawable.btn_round)
                 }
+
+                LoggerUtil.d("modelVersion changed to $modelVersion")
             }
         }
+
 
         // 🔹 새 버튼 클릭 시 오디오 선택
         binding.btnUpload.setOnClickListener {
             checkPermissionAndShowAudio()
+        }
+
+        binding.btnSave.setOnClickListener {
+            sessionViewModel.createSession(
+                modelVersion,
+                binding.etTitle.text.toString(),
+            )
         }
 
         binding.btnSubmitP.setOnClickListener {
@@ -129,6 +152,22 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
                 binding.tvUploadTitle.text = selectedFile.name
             }
             .show()
+    }
+
+    override fun setObserver() {
+        super.setObserver()
+
+        sessionViewModel.sessionState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    LoggerUtil.d("sessionId: ${it.data.sessionId}")
+                }
+                is UiState.Error -> {
+                    showToast("로그인에 실패했습니다.")
+                }
+            }
+        }
     }
 
     private fun moveToNext(route: NavigationRoutes) {

@@ -1,6 +1,7 @@
 package com.capstone2.data.di
 
 import com.capstone2.data.service.AuthService
+import com.capstone2.data.service.SessionService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,4 +16,9 @@ internal class ServiceModule {
     fun providesAuthService(
         client: Retrofit
     ): AuthService = client.create(AuthService::class.java)
+
+    @Provides
+    fun providesSessionService(
+        client: Retrofit
+    ): SessionService = client.create(SessionService::class.java)
 }

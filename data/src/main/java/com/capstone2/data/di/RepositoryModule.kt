@@ -1,8 +1,12 @@
 package com.capstone2.data.di
 
 import com.capstone2.data.repository.AuthRepositoryImpl
+import com.capstone2.data.repository.SessionLocalRepositoryImpl
+import com.capstone2.data.repository.SessionRemoteRepositoryImpl
 import com.capstone2.data.repository.TokenRepositoryImpl
 import com.capstone2.domain.repository.AuthRepository
+import com.capstone2.domain.repository.SessionLocalRepository
+import com.capstone2.domain.repository.SessionRemoteRepository
 import com.capstone2.domain.repository.TokenRepository
 import dagger.Binds
 import dagger.Module
@@ -21,4 +25,12 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsAuthRepository(impl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsSessionLocalRepository(impl: SessionLocalRepositoryImpl): SessionLocalRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsSessionRemoteRepository(impl: SessionRemoteRepositoryImpl): SessionRemoteRepository
 }
