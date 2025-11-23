@@ -4,6 +4,7 @@ import com.capstone2.domain.model.audio.GetUploadUrl
 import com.capstone2.domain.model.audio.GetUploadUrlResult
 import com.capstone2.domain.model.audio.RequestAudioFile
 import com.capstone2.domain.model.audio.RequestAudioFileResult
+import com.capstone2.domain.model.audio.UpdateDBStatusResult
 import java.io.File
 
 interface AudioRepository {
@@ -18,4 +19,6 @@ interface AudioRepository {
     suspend fun getUploadUrl(
         body: GetUploadUrl
     ): Result<GetUploadUrlResult>
+
+    suspend fun updateDBStatus(objectPath: String): Result<UpdateDBStatusResult>
 }
