@@ -27,18 +27,4 @@ class AudioUploadUseCase @Inject constructor(
     ): Result<Boolean> {
         return audioRepository.uploadAudioToPresignedUrl(url, file, contentType)
     }
-
-    /**
-     * 3️⃣ 편리하게 전체 플로우를 실행할 수 있는 함수 (옵션)
-     */
-    suspend fun requestAndUpload(request: RequestAudioFile, file: File, contentType: String = "audio/wav"): Result<Boolean> {
-        return requestAudioFile(request).fold(
-            onSuccess = { result ->
-                uploadAudioToPresignedUrl(result.uploadUrl, file, contentType)
-            },
-            onFailure = { e ->
-                Result.failure(e)
-            }
-        )
-    }
 }

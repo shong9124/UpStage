@@ -2,6 +2,8 @@ package com.capstone2.data.service
 
 import com.capstone2.data.model.audio.RequestAudioFileRequestDTO
 import com.capstone2.data.model.audio.RequestAudioFileResponseDTO
+import com.capstone2.data.model.audio.UploadUrlRequestDTO
+import com.capstone2.data.model.audio.UploadUrlResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -14,4 +16,10 @@ interface AudioService {
         @Header("authorization") accessToken: String,
         @Body body: RequestAudioFileRequestDTO
     ): Response<RequestAudioFileResponseDTO>
+
+    @POST("/storage/upload-url")
+    suspend fun uploadUrl(
+        @Header("authorization") accessToken: String,
+        @Body body: UploadUrlRequestDTO
+    ): Response<UploadUrlResponseDTO>
 }

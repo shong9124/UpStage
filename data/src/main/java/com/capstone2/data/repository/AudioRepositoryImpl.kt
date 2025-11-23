@@ -2,6 +2,8 @@ package com.capstone2.data.repository
 
 import com.capstone2.data.datasource.remote.AudioRemoteDataSource
 import com.capstone2.data.mapper.toDomain
+import com.capstone2.domain.model.audio.GetUploadUrl
+import com.capstone2.domain.model.audio.GetUploadUrlResult
 import okhttp3.Request
 import com.capstone2.domain.model.audio.RequestAudioFile
 import com.capstone2.domain.model.audio.RequestAudioFileResult
@@ -52,6 +54,24 @@ class AudioRepositoryImpl @Inject constructor(
                 }
             }
             Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getUploadUrl(body: GetUploadUrl): Result<GetUploadUrlResult> {
+        return try {
+            val response = dataSource.uploadUrl(body.toDomain())
+            if (response.isSuccessful) {
+                val resBody = response.body()
+                if (resBody != null) {
+                    Result.success(resBody.toDomain())
+                } else {
+                    throw Exception("Body is null")
+                }
+            } else {
+                throw Exception("Request is failure")
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
