@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.capstone2.domain.model.audio.RequestAudioFile
 import com.capstone2.domain.repository.AudioRepository
 import com.capstone2.domain.repository.TokenRepository
-import com.capstone2.domain.usecase.audio.UpdateDBStatusUseCase // 🚨 추가
 import com.capstone2.presentation.util.UiState
-import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AudioUploadViewModel @Inject constructor(
     private val audioRepository: AudioRepository,
-    private val tokenRepository: TokenRepository,
-    private val updateDBStatusUseCase: UpdateDBStatusUseCase // 🚨 추가
+    private val tokenRepository: TokenRepository
 ) : ViewModel() {
 
     private val _uploadState = MutableLiveData<UiState<Boolean>>()
@@ -49,7 +46,7 @@ class AudioUploadViewModel @Inject constructor(
                 return@launch
             }
 
-            // 1. I/O 작업(파일 업로드)을 Dispatchers.IO로 이동
+            // 1. 🚨 수정된 부분: I/O 작업(파일 업로드)을 Dispatchers.IO로 이동하여 NetworkOnMainThreadException 방지
             val uploadResult = withContext(Dispatchers.IO) {
                 audioRepository.uploadAudioToPresignedUrl(
                     uploadUrl,
@@ -60,24 +57,29 @@ class AudioUploadViewModel @Inject constructor(
 
             uploadResult.onSuccess { uploadSuccess ->
 
-                // 2. 🚨 수정된 부분: GCS 업로드 성공 후, updateDBStatusUseCase를 호출하여 서버에 업로드 완료를 알림
-                updateDBStatusUseCase.invoke(objectPath) // objectPath (GetUploadUrlResult의 objectName) 사용
+                // 2. GCS 업로드 성공 후, 서버에 최종 파일 정보 요청 (RequestAudioFile)
+                val request = RequestAudioFile(
+                    sessionId = sessionId,
+                    uploaderId = uploaderId,
+                    gcsUri = gcsUri,
+                    objectPath = objectPath, // GetUploadUrlResult의 objectName이 이 역할을 수행
+                    contentType = "audio/wav",
+                    sizeBytes = file.length().toInt()
+                )
+
+                audioRepository.requestAudioFile(request)
                     .onSuccess {
-                        // updateDBStatus 성공 시 최종 성공 처리
+                        // RequestAudioFileResult 자체는 필요 없으므로 성공 상태만 전달
                         _uploadState.value = UiState.Success(uploadSuccess)
-                        LoggerUtil.d("DB 업데이트 성공")
                     }
                     .onFailure { e ->
-                        // DB 상태 업데이트 실패 시 에러 처리
-                        _uploadState.value = UiState.Error(e.message ?: "Server file status update failed")
+                        _uploadState.value = UiState.Error(e.message ?: "Server file registration failed")
                     }
 
             }.onFailure { e ->
-                // GCS 업로드 실패 시 에러 처리
+                // 업로드 실패 시 에러 처리
                 _uploadState.value = UiState.Error(e.message ?: "GCS Upload failed")
             }
-
-            // NOTE: 기존 requestAudioFile 코드는 새로운 updateDBStatus 플로우를 따르기 위해 제거되었습니다.
         }
     }
 }
