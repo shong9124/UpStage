@@ -10,7 +10,9 @@ import com.capstone2.domain.repository.AudioRepository
 import com.capstone2.domain.repository.TokenRepository
 import com.capstone2.domain.usecase.audio.AudioUploadUseCase
 import com.capstone2.presentation.util.UiState
+import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -28,36 +30,45 @@ class AudioUploadViewModel @Inject constructor(
     val uploadState: LiveData<UiState<Boolean>> get() = _uploadState
 
     fun upload(file: File, sessionId: Int) {
-        val request = RequestAudioFile(
-            sessionId = sessionId,
-            uploaderId = 4,
-            gcsUri = "",      // 서버에서 채워줌
-            objectPath = "",  // 서버에서 채워줌
-            contentType = "audio/wav",
-            sizeBytes = file.length().toInt()
-        )
-
-        _requestState.value = UiState.Loading
+        // 반드시 viewModelScope.launch 안에서 first() 호출
         viewModelScope.launch {
-            audioRepository.requestAudioFile(request)
-                .onSuccess { result ->
-                    _requestState.value = UiState.Success(result)
+            try {
+                // Flow에서 실제 userId 가져오기
+                val userIdPreferences = tokenRepository.getUserId().first()
+                val uploaderId = userIdPreferences.userId
 
-                    // Presigned URL 받아오면 실제 파일 업로드
-                    _uploadState.value = UiState.Loading
-                    audioRepository.uploadAudioToPresignedUrl(
-                        result.uploadUrl,
-                        file,
-                        request.contentType
-                    ).onSuccess { success ->
-                        _uploadState.value = UiState.Success(success)
-                    }.onFailure { e ->
-                        _uploadState.value = UiState.Error(e.message ?: "Upload failed")
+                val request = RequestAudioFile(
+                    sessionId = sessionId,
+                    uploaderId = uploaderId,
+                    gcsUri = "",      // 서버에서 채워줌
+                    objectPath = "",  // 서버에서 채워줌
+                    contentType = "audio/wav",
+                    sizeBytes = file.length().toInt()
+                )
+
+                _requestState.value = UiState.Loading
+                audioRepository.requestAudioFile(request)
+                    .onSuccess { result ->
+                        _requestState.value = UiState.Success(result)
+
+                        // Presigned URL 받아오면 실제 파일 업로드
+                        _uploadState.value = UiState.Loading
+                        audioRepository.uploadAudioToPresignedUrl(
+                            result.uploadUrl,
+                            file,
+                            request.contentType
+                        ).onSuccess { success ->
+                            _uploadState.value = UiState.Success(success)
+                        }.onFailure { e ->
+                            _uploadState.value = UiState.Error(e.message ?: "Upload failed")
+                        }
                     }
-                }
-                .onFailure { e ->
-                    _requestState.value = UiState.Error(e.message ?: "Request failed")
-                }
+                    .onFailure { e ->
+                        _requestState.value = UiState.Error(e.message ?: "Request failed")
+                    }
+            } catch (e: Exception) {
+                _requestState.value = UiState.Error(e.message ?: "Failed to get userId")
+            }
         }
     }
 }

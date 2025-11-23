@@ -3,6 +3,7 @@ package com.capstone2.data.repository
 import com.capstone2.data.datasource.remote.AuthRemoteDataSource
 import com.capstone2.data.model.auth.SignUpRequestDTO
 import com.capstone2.domain.model.auth.GetUserInfo
+import com.capstone2.domain.model.auth.LoginResult
 import com.capstone2.domain.repository.AuthRepository
 import com.capstone2.domain.repository.TokenRepository
 import javax.inject.Inject
@@ -24,14 +25,21 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(email: String, password: String): Result<Boolean> {
+    override suspend fun login(email: String, password: String): Result<LoginResult> {
         return try {
             val response = dataSource.login(email, password)
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     tokenRepository.saveTokens(body.accessToken, "")
-                    Result.success(true)
+                    Result.success(body.let {
+                        LoginResult(
+                            it.userId,
+                            it.email,
+                            it.accessToken,
+                            it.expiresInSeconds
+                        )
+                    })
                 } else {
                     throw Exception("Body is null")
                 }
