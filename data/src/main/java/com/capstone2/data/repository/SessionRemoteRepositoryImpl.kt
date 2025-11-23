@@ -1,9 +1,12 @@
 package com.capstone2.data.repository
 
 import com.capstone2.data.datasource.remote.SessionRemoteDataSource
+import com.capstone2.data.mapper.toDomain
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.domain.model.session.CreateSession
 import com.capstone2.domain.model.session.GetSessionList
+import com.capstone2.domain.model.session.SaveScript
+import com.capstone2.domain.model.session.SaveScriptResult
 import com.capstone2.domain.repository.SessionRemoteRepository
 import javax.inject.Inject
 
@@ -50,6 +53,34 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                             completedAt = it.completedAt,
                             createdAt = it.createdAt,
                             updatedAt = it.updatedAt
+                        )
+                    })
+                } else {
+                    throw Exception("Body is null")
+                }
+            } else {
+                throw Exception("Request is failure")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun saveScript(sessionId: Int, body: SaveScript): Result<SaveScriptResult> {
+        return try {
+            val response = dataSource.saveScript(sessionId, body.toDomain())
+            if (response.isSuccessful) {
+                val resBody = response.body()
+                if (resBody != null) {
+                    Result.success(resBody.let {
+                        SaveScriptResult(
+                            sessionId = it.sessionId,
+                            gcsUri = it.gcsUri,
+                            signedUrl = it.signedUrl,
+                            sha256 = it.sha256,
+                            sizeBytes = it.sizeBytes,
+                            version = it.version,
+                            language = it.language,
                         )
                     })
                 } else {

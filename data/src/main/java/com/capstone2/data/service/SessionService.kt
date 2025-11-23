@@ -3,11 +3,14 @@ package com.capstone2.data.service
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
+import com.capstone2.data.model.session.SaveScriptRequestDTO
+import com.capstone2.data.model.session.SaveScriptResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface SessionService {
 
@@ -21,4 +24,11 @@ interface SessionService {
     suspend fun getSessionList(
         @Header("Authorization") accessToken: String
     ): Response<List<GetSessionListResponseDTO>>
+
+    @POST("/sessions/{sessionId}/script")
+    suspend fun saveScript(
+        @Header("Authorization") accessToken: String,
+        @Path("sessionId") sessionId: Int,
+        @Body body: SaveScriptRequestDTO
+    ): Response<SaveScriptResponseDTO>
 }

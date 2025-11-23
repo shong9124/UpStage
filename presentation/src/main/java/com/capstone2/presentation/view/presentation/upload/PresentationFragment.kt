@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone2.domain.model.audio.GetUploadUrlRequest
+import com.capstone2.domain.model.session.SaveScript
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
@@ -34,6 +35,7 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
     private val sessionViewModel: SessionViewModel by viewModels()
     private val audioUploadViewModel: AudioUploadViewModel by viewModels()
     private val getUploadUrlViewModel: GetUploadUrlViewModel by viewModels()
+    private val saveScriptViewModel: SaveScriptViewModel by viewModels()
 
     override fun initView() {
         setBottomNav()
@@ -66,12 +68,25 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
             }
         }
 
+        // 대본 업로드 버튼
+        binding.btnScript.setOnClickListener {
+            val script = binding.etText.text.toString()
+            currentSessionId?.let { id ->
+                saveScriptViewModel.saveScript(
+                    id,
+                    SaveScript(
+                        script, "KOREAN", true
+                    )
+                )
+            }
+        }
 
         // 🔹 새 버튼 클릭 시 오디오 선택
         binding.btnUpload.setOnClickListener {
             checkPermissionAndShowAudio()
         }
 
+        // 세션 생성 버튼
         binding.btnSave.setOnClickListener {
             sessionViewModel.createSession(
                 modelVersion,
@@ -196,6 +211,18 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
 
                 is UiState.Error -> {
                     showToast("세션 생성에 실패했습니다.")
+                }
+            }
+        }
+
+        saveScriptViewModel.saveScriptState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    LoggerUtil.d("대본 업로드에 성공했습니다.")
+                }
+                is UiState.Error -> {
+                    showToast("대본 업로드에 실패했습니다.")
                 }
             }
         }

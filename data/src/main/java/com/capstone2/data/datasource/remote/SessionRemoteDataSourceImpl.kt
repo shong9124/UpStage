@@ -3,6 +3,8 @@ package com.capstone2.data.datasource.remote
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
+import com.capstone2.data.model.session.SaveScriptRequestDTO
+import com.capstone2.data.model.session.SaveScriptResponseDTO
 import com.capstone2.data.service.SessionService
 import com.capstone2.domain.repository.SessionLocalRepository
 import com.capstone2.domain.repository.TokenRepository
@@ -24,5 +26,12 @@ class SessionRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSessionList(): Response<List<GetSessionListResponseDTO>> {
         return service.getSessionList(getAccessTokenWithPrefix())
+    }
+
+    override suspend fun saveScript(
+        sessionId: Int,
+        body: SaveScriptRequestDTO
+    ): Response<SaveScriptResponseDTO> {
+        return service.saveScript(getAccessTokenWithPrefix(), sessionId, body)
     }
 }
