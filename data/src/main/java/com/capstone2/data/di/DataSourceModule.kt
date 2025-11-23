@@ -6,6 +6,8 @@ import com.capstone2.data.datasource.local.TokenLocalDataSource
 import com.capstone2.data.datasource.remote.AuthRemoteDataSource
 import com.capstone2.data.datasource.remote.AuthRemoteDataSourceImpl
 import com.capstone2.data.datasource.local.TokenLocalDataSourceImpl
+import com.capstone2.data.datasource.remote.AudioRemoteDataSource
+import com.capstone2.data.datasource.remote.AudioRemoteDataSourceImpl
 import com.capstone2.data.datasource.remote.SessionRemoteDataSource
 import com.capstone2.data.datasource.remote.SessionRemoteDataSourceImpl
 import dagger.Binds
@@ -41,4 +43,10 @@ abstract class DataSourceModule {
     abstract fun bindSessionRemoteDataSource(
         sessionRemoteDataSourceImpl: SessionRemoteDataSourceImpl
     ): SessionRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAudioRemoteDataSource(
+        audioRemoteDataSource: AudioRemoteDataSourceImpl
+    ): AudioRemoteDataSource
 }

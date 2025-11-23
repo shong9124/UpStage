@@ -1,9 +1,11 @@
 package com.capstone2.data.di
 
+import com.capstone2.data.repository.AudioRepositoryImpl
 import com.capstone2.data.repository.AuthRepositoryImpl
 import com.capstone2.data.repository.SessionLocalRepositoryImpl
 import com.capstone2.data.repository.SessionRemoteRepositoryImpl
 import com.capstone2.data.repository.TokenRepositoryImpl
+import com.capstone2.domain.repository.AudioRepository
 import com.capstone2.domain.repository.AuthRepository
 import com.capstone2.domain.repository.SessionLocalRepository
 import com.capstone2.domain.repository.SessionRemoteRepository
@@ -33,4 +35,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsSessionRemoteRepository(impl: SessionRemoteRepositoryImpl): SessionRemoteRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsAudioRepository(impl: AudioRepositoryImpl): AudioRepository
 }

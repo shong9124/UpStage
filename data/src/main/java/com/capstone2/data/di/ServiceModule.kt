@@ -1,5 +1,6 @@
 package com.capstone2.data.di
 
+import com.capstone2.data.service.AudioService
 import com.capstone2.data.service.AuthService
 import com.capstone2.data.service.SessionService
 import dagger.Module
@@ -21,4 +22,9 @@ internal class ServiceModule {
     fun providesSessionService(
         client: Retrofit
     ): SessionService = client.create(SessionService::class.java)
+
+    @Provides
+    fun providesAudioService(
+        client: Retrofit
+    ): AudioService = client.create(AudioService::class.java)
 }
