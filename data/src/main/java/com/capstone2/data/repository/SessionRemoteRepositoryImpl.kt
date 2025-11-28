@@ -3,6 +3,8 @@ package com.capstone2.data.repository
 import com.capstone2.data.datasource.remote.SessionRemoteDataSource
 import com.capstone2.data.mapper.toDomain
 import com.capstone2.data.model.session.CreateSessionRequestDTO
+import com.capstone2.domain.model.session.ConnectSession
+import com.capstone2.domain.model.session.ConnectSessionResult
 import com.capstone2.domain.model.session.CreateSession
 import com.capstone2.domain.model.session.GetSessionList
 import com.capstone2.domain.model.session.SaveScript
@@ -81,6 +83,29 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                             sizeBytes = it.sizeBytes,
                             version = it.version,
                             language = it.language,
+                        )
+                    })
+                } else {
+                    throw Exception("Body is null")
+                }
+            } else {
+                throw Exception("Request is failure")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun connectSession(id: Int, body: ConnectSession): Result<ConnectSessionResult> {
+        return try {
+            val response = dataSource.connectSession(id, body.toDomain())
+            if (response.isSuccessful) {
+                val resBody = response.body()
+                if (resBody != null) {
+                    Result.success(resBody.let {
+                        ConnectSessionResult(
+                            sessionId = it.sessionId,
+                            status = it.status
                         )
                     })
                 } else {

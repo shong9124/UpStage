@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone2.domain.model.audio.GetUploadUrlRequest
+import com.capstone2.domain.model.session.ConnectSession
 import com.capstone2.domain.model.session.SaveScript
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
@@ -30,12 +31,14 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
     private var modelVersion = ""
     private var selectedAudioFile: File? = null // 선택된 오디오 파일을 저장할 변수
     private var currentSessionId: Int? = null // 현재 세션 ID를 저장할 변수
+    private var currentGcsUri: String? = null // 🚨 추가: ConnectSession 호출을 위해 GCS URI를 임시 저장할 변수
 
     private val REQUEST_PERMISSION = 1001
     private val sessionViewModel: SessionViewModel by viewModels()
     private val audioUploadViewModel: AudioUploadViewModel by viewModels()
     private val getUploadUrlViewModel: GetUploadUrlViewModel by viewModels()
     private val saveScriptViewModel: SaveScriptViewModel by viewModels()
+    private val connectSessionViewModel: ConnectSessionViewModel by viewModels() // 🚨 유지: ConnectSessionViewModel
 
     override fun initView() {
         setBottomNav()
@@ -238,8 +241,11 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
                     val sessionId = currentSessionId
                     val result = it.data
 
+                    // 🚨 GCS URI 저장 (ConnectSession 호출을 위해)
+                    currentGcsUri = result.gcsUri
+
                     if (file != null && sessionId != null) {
-                        // GetUploadUrlResult의 objectName을 AudioUploadViewModel의 objectPath로 사용
+                        // 1단계: AudioUploadViewModel을 통해 GCS 업로드 및 서버 파일 등록 요청
                         audioUploadViewModel.finalizeUpload(
                             file = file,
                             sessionId = sessionId,
@@ -258,20 +264,44 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
             }
         }
 
-        // audioUploadViewModel.uploadState 관찰 (파일 업로드 및 서버 최종 등록 결과)
+        // audioUploadViewModel.uploadState 관찰 (GCS 업로드 및 서버 파일 등록 결과)
         audioUploadViewModel.uploadState.observe(viewLifecycleOwner) {
             when (it) {
-                is UiState.Loading -> {
-                    showToast("파일 업로드 중...")
-                }
+                is UiState.Loading -> { showToast("파일 업로드 및 서버 등록 중...") }
                 is UiState.Success -> {
                     LoggerUtil.d("File Upload and Registration Success: ${it.data}")
-                    showToast("음성 파일 업로드 및 처리가 완료되었습니다.")
+                    showToast("음성 파일 업로드 및 등록 완료. 세션 연결 시작...")
+
+                    // 🚨 2단계: GCS 업로드 및 서버 등록 성공 시, ConnectSessionViewModel 호출
+                    val sessionId = currentSessionId
+                    val gcsUri = currentGcsUri
+
+                    if (sessionId != null && gcsUri != null) {
+                        // ConnectSessionViewModel을 사용하여 세션 ID와 GCS URI 전달
+                        connectSessionViewModel.connectSession(sessionId, ConnectSession(gcsUri))
+                    } else {
+                        showToast("세션 연결에 필요한 ID 또는 GCS 경로가 없습니다.")
+                    }
                 }
 
                 is UiState.Error -> {
                     LoggerUtil.e("Upload Error: ${it.message}")
-                    showToast("음성 파일 업로드에 실패했습니다. (${it.message})")
+                    showToast("음성 파일 업로드 및 처리에 실패했습니다. (${it.message})")
+                }
+            }
+        }
+
+        // 🚨 ConnectSessionViewModel 결과 관찰 로직 추가
+        connectSessionViewModel.connectState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> { showToast("세션 연결 및 처리 중...") }
+                is UiState.Success -> {
+                    LoggerUtil.d("Session Connect Success: ${it.data}")
+                    showToast("세션 연결이 최종 완료되었습니다.")
+                }
+                is UiState.Error -> {
+                    LoggerUtil.e("Session Connect Error: ${it.message}")
+                    showToast("세션 연결에 실패했습니다. (${it.message})")
                 }
             }
         }

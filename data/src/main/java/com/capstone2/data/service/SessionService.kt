@@ -1,5 +1,7 @@
 package com.capstone2.data.service
 
+import com.capstone2.data.model.session.ConnectSessionRequestDTO
+import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
@@ -31,4 +33,11 @@ interface SessionService {
         @Path("sessionId") sessionId: Int,
         @Body body: SaveScriptRequestDTO
     ): Response<SaveScriptResponseDTO>
+
+    @POST("/sessions/{id}/audio")
+    suspend fun connectSession(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int,
+        @Body body: ConnectSessionRequestDTO
+    ): Response<ConnectSessionResponseDTO>
 }

@@ -1,5 +1,7 @@
 package com.capstone2.data.datasource.remote
 
+import com.capstone2.data.model.session.ConnectSessionRequestDTO
+import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
@@ -13,4 +15,6 @@ interface SessionRemoteDataSource {
     suspend fun getSessionList(): Response<List<GetSessionListResponseDTO>>
 
     suspend fun saveScript(sessionId: Int, body: SaveScriptRequestDTO): Response<SaveScriptResponseDTO>
+
+    suspend fun connectSession(id: Int, body: ConnectSessionRequestDTO): Response<ConnectSessionResponseDTO>
 }

@@ -1,5 +1,7 @@
 package com.capstone2.domain.repository
 
+import com.capstone2.domain.model.session.ConnectSession
+import com.capstone2.domain.model.session.ConnectSessionResult
 import com.capstone2.domain.model.session.CreateSession
 import com.capstone2.domain.model.session.GetSessionList
 import com.capstone2.domain.model.session.SaveScript
@@ -11,4 +13,6 @@ interface SessionRemoteRepository {
     suspend fun getSessionList(): Result<List<GetSessionList>>
 
     suspend fun saveScript(sessionId: Int, body: SaveScript): Result<SaveScriptResult>
+
+    suspend fun connectSession(id: Int, body: ConnectSession): Result<ConnectSessionResult>
 }
