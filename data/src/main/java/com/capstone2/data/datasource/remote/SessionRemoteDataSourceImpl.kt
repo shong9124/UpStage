@@ -1,5 +1,6 @@
 package com.capstone2.data.datasource.remote
 
+import com.capstone2.data.model.session.ai.AiAnalysisResponseDTO
 import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
@@ -42,6 +43,10 @@ class SessionRemoteDataSourceImpl @Inject constructor(
         body: ConnectSessionRequestDTO
     ): Response<ConnectSessionResponseDTO> {
         return service.connectSession(getAccessTokenWithPrefix(), id, body)
+    }
+
+    override suspend fun aiAnalysis(sessionId: Int): Response<AiAnalysisResponseDTO> {
+        return service.aiAnalysis(getAccessTokenWithPrefix(), sessionId)
     }
 
 

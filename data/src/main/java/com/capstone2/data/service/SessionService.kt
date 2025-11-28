@@ -1,5 +1,6 @@
 package com.capstone2.data.service
 
+import com.capstone2.data.model.session.ai.AiAnalysisResponseDTO
 import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
@@ -40,4 +41,10 @@ interface SessionService {
         @Path("id") id: Int,
         @Body body: ConnectSessionRequestDTO
     ): Response<ConnectSessionResponseDTO>
+
+    @POST("/sessions/{sessionId}/analysis")
+    suspend fun aiAnalysis(
+        @Header("Authorization") accessToken: String,
+        @Path("sessionId") sessionId: Int
+    ): Response<AiAnalysisResponseDTO>
 }

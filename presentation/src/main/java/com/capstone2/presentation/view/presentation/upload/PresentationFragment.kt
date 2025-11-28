@@ -39,6 +39,10 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
     private val getUploadUrlViewModel: GetUploadUrlViewModel by viewModels()
     private val saveScriptViewModel: SaveScriptViewModel by viewModels()
     private val connectSessionViewModel: ConnectSessionViewModel by viewModels() // 🚨 유지: ConnectSessionViewModel
+    // 이 AiAnalysisViewModel을 PresentationResultFragment와 공유합니다.
+    private val aiAnalysisViewModel: AiAnalysisViewModel by viewModels(
+        ownerProducer = { requireActivity() } // Activity Scope로 지정
+    )
 
     override fun initView() {
         setBottomNav()
@@ -98,27 +102,26 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
         }
 
         binding.btnSubmitP.setOnClickListener {
+            val script = binding.etText.text.toString().trim()
+            val title = binding.etTitle.text.toString().trim()
             var allFilled = true
-            val editTextList = listOf(binding.etText, binding.etTitle)
-            for (editText in editTextList) {
-                if (editText.text.toString().trim().isEmpty()) {
-                    editText.background = ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.shape_edit_text_type_stroke_error
-                    )
-                    allFilled = false
-                } else {
-                    editText.background = ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.shape_edit_text_type_stroke
-                    )
-                }
+
+            // 필수 필드 검사 로직
+            if (script.isEmpty() || title.isEmpty() || selectedAudioFile == null || currentSessionId == null) {
+                // 검사 로직 (생략: 기존 코드처럼 UI 피드백을 주시면 됩니다.)
+                Toast.makeText(requireContext(), "세션 생성, 대본, 오디오 파일을 모두 완료해주세요", Toast.LENGTH_SHORT).show()
+                allFilled = false
             }
-            if (!allFilled) {
-                Toast.makeText(requireContext(), "빈칸을 모두 채워주세요", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+
+            if (allFilled && currentSessionId != null) {
+                // 🌟 최종 AI 분석 요청
+                aiAnalysisViewModel.aiAnalysis(currentSessionId!!)
+
+                // 🌟 요청 후 바로 다음 화면으로 이동하여 결과 관찰을 위임
+                moveToNext(NavigationRoutes.PresentationResult)
+            } else if (currentSessionId == null) {
+                Toast.makeText(requireContext(), "세션 생성이 먼저 완료되어야 합니다.", Toast.LENGTH_SHORT).show()
             }
-            moveToNext(NavigationRoutes.PresentationResult)
         }
     }
 
@@ -291,13 +294,14 @@ class PresentationFragment : BaseFragment<FragmentPresentationBinding>() {
             }
         }
 
-        // 🚨 ConnectSessionViewModel 결과 관찰 로직 추가
+        // 🚨 ConnectSessionViewModel 결과 관찰 로직 수정 (aiAnalysis 호출 제거)
         connectSessionViewModel.connectState.observe(viewLifecycleOwner) {
             when (it) {
                 is UiState.Loading -> { showToast("세션 연결 및 처리 중...") }
                 is UiState.Success -> {
                     LoggerUtil.d("Session Connect Success: ${it.data}")
-                    showToast("세션 연결이 최종 완료되었습니다.")
+                    showToast("세션 연결이 최종 완료되었습니다. 이제 분석 버튼을 누를 수 있습니다.")
+
                 }
                 is UiState.Error -> {
                     LoggerUtil.e("Session Connect Error: ${it.message}")

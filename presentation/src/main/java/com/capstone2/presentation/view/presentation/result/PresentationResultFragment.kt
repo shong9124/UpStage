@@ -6,17 +6,27 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.widget.ImageView
 import androidx.constraintlayout.widget.Group
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
 import com.capstone2.presentation.base.BaseFragment
 import com.capstone2.presentation.databinding.FragmentPresentationResultBinding
+import com.capstone2.presentation.util.UiState
+import com.capstone2.presentation.view.presentation.upload.AiAnalysisViewModel
+import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PresentationResultFragment : BaseFragment<FragmentPresentationResultBinding>() {
+
+    // 🚨 추가: Activity Scope의 ViewModel을 가져와 공유
+    private val aiAnalysisViewModel: AiAnalysisViewModel by viewModels(
+        ownerProducer = { requireActivity() } // Activity Scope로 지정
+    )
+
     override fun initView() {
 
         binding.btnReturnToHome.setOnClickListener {
@@ -25,6 +35,32 @@ class PresentationResultFragment : BaseFragment<FragmentPresentationResultBindin
 
         startAnimation()
 
+    }
+
+    // 🌟 Observer 메서드 추가
+    override fun setObserver() {
+        super.setObserver()
+
+        aiAnalysisViewModel.aiAnalysisState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {
+                    // 분석 중 애니메이션 시작 또는 로딩 표시
+                }
+                is UiState.Success -> {
+                    LoggerUtil.d("분석 결과를 성공적으로 받아왔습니다.") // 🌟 요청하신 로깅
+
+                    // 🌟 AI 분석 결과 (it.data: AiAnalysisResult)를 화면에 표시
+                    // 예: binding.tvScore.text = it.data.scoreMetrics.finalScore.toString()
+
+                    startAnimation()
+                }
+                is UiState.Error -> {
+                    showToast("분석 결과를 불러오는 데 실패했습니다: ${it.message}")
+                    LoggerUtil.e("분석 결과를 불러오는 데 실패했습니다: ${it.message}")
+                    // 에러 처리 및 홈으로 복귀 등
+                }
+            }
+        }
     }
 
     private fun startAnimation() {
@@ -56,7 +92,7 @@ class PresentationResultFragment : BaseFragment<FragmentPresentationResultBindin
     private fun showStepWithBlink(dash: ImageView, stepGroup: Group, onStepComplete: () -> Unit) {
         val blink = ObjectAnimator.ofFloat(dash, "alpha", 0f, 1f)
         blink.duration = 500
-        blink.repeatCount = 4
+        blink.repeatCount = 8
         blink.repeatMode = ObjectAnimator.REVERSE
 
         blink.addListener(object : AnimatorListenerAdapter() {
