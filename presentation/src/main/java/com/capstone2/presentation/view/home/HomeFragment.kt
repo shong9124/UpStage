@@ -1,9 +1,11 @@
 package com.capstone2.presentation.view.home
 
 import android.graphics.Color
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone2.domain.model.home.RecentFeedback
 // GetScoresResult 모델 import 추가
@@ -142,6 +144,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 is UiState.Loading -> {}
                 is UiState.Success -> {
                     LoggerUtil.d("${it.data}")
+                    val presentations = it.data
+                    if (it.data.isNotEmpty()) {
+                        val adapter = MyRecentPresentationRvAdapter(presentations)
+                        binding.rvMyRecentPresentation.adapter = adapter
+                        binding.rvMyRecentPresentation.layoutManager = LinearLayoutManager(requireContext())
+                        binding.tvMyPresentationNothing.visibility = View.INVISIBLE
+                    } else {
+                        binding.tvMyPresentationNothing.visibility = View.VISIBLE
+                    }
                 }
                 is UiState.Error -> {
                     showToast("정보 조회에 실패했습니다.")
