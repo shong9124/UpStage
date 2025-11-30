@@ -47,10 +47,12 @@ class PresentationResultFragment : BaseFragment<FragmentPresentationResultBindin
                     // 분석 중 애니메이션 시작 또는 로딩 표시
                 }
                 is UiState.Success -> {
-                    LoggerUtil.d("분석 결과를 성공적으로 받아왔습니다.") // 🌟 요청하신 로깅
+                    LoggerUtil.d("분석 결과를 성공적으로 받아왔습니다.")
 
                     // 🌟 AI 분석 결과 (it.data: AiAnalysisResult)를 화면에 표시
                     // 예: binding.tvScore.text = it.data.scoreMetrics.finalScore.toString()
+                    binding.tvScore.text = it.data.scoreMetrics.finalScore.toInt().toString() + " 점"
+                    binding.tvSpeedInt.text = ((it.data.scoreMetrics.userWpm * 100) / 100).toString()
 
                     startAnimation()
                 }
