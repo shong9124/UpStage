@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
 
     private val viewModel : UserInfoViewModel by viewModels()
+    private val getHistoryViewModel : GetHistoryViewModel by viewModels()
 
     private var timeJob: Job? = null
 
@@ -27,6 +28,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
         setBottomNav()
 
         viewModel.getUserInfo()
+        getHistoryViewModel.getHistory()
 
         val itemList =
             listOf(
@@ -34,11 +36,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
                 MyPresentationRecord("test title2", 90),
                 MyPresentationRecord("test title3", 100)
             )
-
-        val adapter = MyPresentationRecordRvAdapter(itemList)
-
-        binding.rvMyRecord.adapter = adapter
-        binding.rvMyRecord.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun setObserver() {
@@ -52,6 +49,22 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>() {
                 }
                 is UiState.Error -> {
                     showToast("정보 조회에 실패했습니다.")
+                }
+            }
+        }
+
+        getHistoryViewModel.getHistoryState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    val itemList = it.data
+                    val adapter = MyPresentationRecordRvAdapter(itemList)
+
+                    binding.rvMyRecord.adapter = adapter
+                    binding.rvMyRecord.layoutManager = LinearLayoutManager(requireContext())
+                }
+                is UiState.Error -> {
+                    showToast("기록 조회에 실패했습니다.")
                 }
             }
         }

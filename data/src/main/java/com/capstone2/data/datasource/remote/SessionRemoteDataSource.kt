@@ -5,6 +5,7 @@ import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
+import com.capstone2.data.model.session.GetHistoryResponseDTO
 import com.capstone2.data.model.session.GetScoresResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
 import com.capstone2.data.model.session.SaveScriptRequestDTO
@@ -23,4 +24,6 @@ interface SessionRemoteDataSource {
     suspend fun aiAnalysis(sessionId: Int): Response<AiAnalysisResponseDTO>
 
     suspend fun getScores(): Response<List<GetScoresResponseDTO>>
+
+    suspend fun getHistory(): Response<List<GetHistoryResponseDTO>>
 }

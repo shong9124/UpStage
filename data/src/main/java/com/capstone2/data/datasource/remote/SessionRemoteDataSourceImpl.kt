@@ -5,6 +5,7 @@ import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
+import com.capstone2.data.model.session.GetHistoryResponseDTO
 import com.capstone2.data.model.session.GetScoresResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
 import com.capstone2.data.model.session.SaveScriptRequestDTO
@@ -19,7 +20,6 @@ import javax.inject.Inject
 class SessionRemoteDataSourceImpl @Inject constructor(
     private val service: SessionService,
     private val tokenRepository: TokenRepository,
-    private val sessionRepository: SessionLocalRepository
 ) : SessionRemoteDataSource {
 
     private suspend fun getAccessTokenWithPrefix(): String = "Bearer ${tokenRepository.getTokens().first().accessToken}"
@@ -54,5 +54,7 @@ class SessionRemoteDataSourceImpl @Inject constructor(
         return service.getScores(getAccessTokenWithPrefix())
     }
 
-
+    override suspend fun getHistory(): Response<List<GetHistoryResponseDTO>> {
+        return service.getHistory(getAccessTokenWithPrefix())
+    }
 }

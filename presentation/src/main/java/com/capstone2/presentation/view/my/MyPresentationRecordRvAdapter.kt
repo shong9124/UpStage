@@ -4,20 +4,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.capstone2.domain.model.my.MyPresentationRecord
+import com.capstone2.domain.model.session.GetHistoryResult
 import com.capstone2.presentation.databinding.ItemMyPresentationRecordBinding
 import com.capstone2.util.LoggerUtil
 
 class MyPresentationRecordRvAdapter(
-    private val items: List<MyPresentationRecord>
+    private val items: List<GetHistoryResult>
 ) : RecyclerView.Adapter<MyPresentationRecordRvAdapter.MyPresentationViewHolder>() {
 
     inner class MyPresentationViewHolder(val binding: ItemMyPresentationRecordBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: MyPresentationRecord) {
+        fun bind(item: GetHistoryResult) {
             LoggerUtil.d("Binding item: ${item.title}")
 
             binding.tvRecordTitle.text = item.title
-            binding.tvRecordScore.text = item.score.toString()
         }
     }
 

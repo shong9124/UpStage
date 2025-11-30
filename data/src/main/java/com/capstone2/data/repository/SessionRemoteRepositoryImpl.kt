@@ -6,6 +6,7 @@ import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.domain.model.session.ConnectSession
 import com.capstone2.domain.model.session.ConnectSessionResult
 import com.capstone2.domain.model.session.CreateSession
+import com.capstone2.domain.model.session.GetHistoryResult
 import com.capstone2.domain.model.session.GetScoresResult
 import com.capstone2.domain.model.session.GetSessionList
 import com.capstone2.domain.model.session.SaveScript
@@ -164,6 +165,34 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                             date = it.date,
                             finalScore = it.finalScore,
                             sessionId = it.sessionId
+                        )
+                    })
+                } else {
+                    LoggerUtil.e("HTTP 200이지만 Body가 null입니다.")
+                    throw Exception("Body is null")
+                }
+            } else {
+                throw Exception("Request is failure")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getHistory(): Result<List<GetHistoryResult>> {
+        return try {
+            val response = dataSource.getHistory()
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body.map {
+                        GetHistoryResult(
+                            audioGcsUri = it.audioGcsUri,
+                            createdDate = it.createdDate,
+                            feedbackGcsUri = it.feedbackGcsUri,
+                            scriptGcsUri = it.scriptGcsUri,
+                            sessionId = it.sessionId,
+                            title = it.title
                         )
                     })
                 } else {
