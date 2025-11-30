@@ -6,6 +6,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone2.domain.model.home.RecentFeedback
+// GetScoresResult 모델 import 추가
+import com.capstone2.domain.model.session.GetScoresResult
 import com.capstone2.navigation.NavigationCommand
 import com.capstone2.navigation.NavigationRoutes
 import com.capstone2.presentation.R
@@ -35,7 +37,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         setBottomNav()
         viewModel.getSessionList()
-        getScoresViewModel.getScores()
+        getScoresViewModel.getScores() // 점수 데이터 요청
 
         val items = listOf(
             RecentFeedback("발표속도가 너무 빨라요.", "#발표속도"),
@@ -66,44 +68,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             }
         }
 
-        val scores = listOf(80, 75, 90, 85, 70, 95, 88)
-        val dates = listOf("09-15", "09-16", "09-17", "09-18", "09-19", "09-20", "09-21")
-
-        // 점수 → Entry 변환
-        val entries = scores.mapIndexed { index, score ->
-            Entry(index.toFloat(), score.toFloat())
-        }
-
-        // 데이터셋 만들기
-        val dataSet = LineDataSet(entries, "일주일 점수").apply {
-            color = R.color.primary      // 선 색상
-            lineWidth = 3f                           // 선 두께
-            circleRadius = 4f                        // 점 크기
-            setCircleColor(R.color.primary)                // 점 색상
-            setDrawValues(true)                      // 값 텍스트 표시 여부
-            valueTextSize = 12f                      // 값 텍스트 크기
-            valueTextColor = Color.BLACK             // 값 텍스트 색상
-            mode = LineDataSet.Mode.LINEAR     // 선을 곡선으로
-
-            // 선 아래 채우기
-            setDrawFilled(true)
-            fillAlpha = 30
-            fillColor = R.color.primary
-        }
-
-        // 차트에 데이터 넣기
-        val lineData = LineData(dataSet)
-        binding.lcChart.data = lineData
-
-        // X축 라벨 커스텀 (날짜 표시)
-        binding.lcChart.xAxis.apply {
-            valueFormatter = IndexAxisValueFormatter(dates)
-            position = XAxis.XAxisPosition.BOTTOM
-            granularity = 1f
-            textSize = 12f
-        }
-
-        // 기타 설정
+        // --- Line Chart General Configuration (일반 설정은 그대로 유지) ---
         binding.lcChart.animateXY(700, 700) // X, Y축 기준 0.7초 동안 애니메이션
         // X, Y축 점선 스타일
         binding.lcChart.xAxis.enableGridDashedLine(10f, 5f, 0f) // (실선길이, 공백길이, phase)
@@ -113,8 +78,60 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         binding.lcChart.axisRight.isEnabled = false // 오른쪽 Y축 제거
         binding.lcChart.description.isEnabled = false // 기본 설명 제거
         binding.lcChart.legend.isEnabled = false
-        binding.lcChart.invalidate() // 차트 갱신
+        // --- 하드코딩된 데이터 관련 코드는 제거됨 ---
+    }
 
+    // API로부터 받은 실제 데이터를 이용해 차트를 설정하는 함수
+    private fun setupLineChart(scoresData: List<GetScoresResult>) {
+        if (scoresData.isEmpty()) {
+            // 데이터가 없을 경우 처리
+            return
+        }
+
+        // sessionId를 기준으로 정렬 (날짜 순서를 보장하기 위함)
+        val sortedData = scoresData.sortedBy { it.sessionId }
+
+        // 1. finalScore (Y값)와 date (X 라벨) 추출
+        // finalScore는 Double이므로 Float으로 변환하여 Entry 생성
+        val entries = sortedData.mapIndexed { index, scoreResult ->
+            Entry(index.toFloat(), scoreResult.finalScore.toFloat())
+        }
+
+        val dates = sortedData.map { it.date }
+
+        val primaryColor = ContextCompat.getColor(requireContext(), R.color.primary)
+
+        // 2. 데이터셋 만들기
+        val dataSet = LineDataSet(entries, "일주일 점수").apply {
+            color = primaryColor      // 선 색상
+            lineWidth = 3f                           // 선 두께
+            circleRadius = 4f                        // 점 크기
+            setCircleColor(primaryColor)                // 점 색상
+            setDrawValues(true)                      // 값 텍스트 표시 여부
+            valueTextSize = 12f                      // 값 텍스트 크기
+            valueTextColor = Color.BLACK             // 값 텍스트 색상
+            mode = LineDataSet.Mode.LINEAR     // 선을 곡선으로
+
+            // 선 아래 채우기
+            setDrawFilled(true)
+            fillAlpha = 30
+            fillColor = primaryColor
+        }
+
+        // 3. 차트에 데이터 넣기
+        val lineData = LineData(dataSet)
+        binding.lcChart.data = lineData
+
+        // 4. X축 라벨 커스텀 (날짜 표시)
+        binding.lcChart.xAxis.apply {
+            valueFormatter = IndexAxisValueFormatter(dates)
+            position = XAxis.XAxisPosition.BOTTOM
+            granularity = 1f
+            textSize = 12f
+        }
+
+        // 5. 차트 갱신
+        binding.lcChart.invalidate()
     }
 
     override fun setObserver() {
@@ -136,7 +153,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
             when (it) {
                 is UiState.Loading -> {}
                 is UiState.Success -> {
-                    LoggerUtil.d("${it.data}")
+                    LoggerUtil.d("Scores fetched: ${it.data}")
+                    // 성공 시, 실제 데이터로 차트 설정 함수 호출
+                    setupLineChart(it.data)
                 }
                 is UiState.Error -> {
                     showToast("점수 조회에 실패했습니다.")
