@@ -7,7 +7,7 @@ data class GetScoresResponseDTO(
     @SerializedName("date")
     val date: String,
     @SerializedName("finalScore")
-    val finalScore: Int,
+    val finalScore: Double,
     @SerializedName("sessionId")
     val sessionId: Int
 )

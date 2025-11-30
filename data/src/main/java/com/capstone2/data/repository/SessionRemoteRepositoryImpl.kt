@@ -12,6 +12,7 @@ import com.capstone2.domain.model.session.SaveScript
 import com.capstone2.domain.model.session.SaveScriptResult
 import com.capstone2.domain.model.session.ai.AiAnalysisResult
 import com.capstone2.domain.repository.SessionRemoteRepository
+import com.capstone2.util.LoggerUtil
 import javax.inject.Inject
 
 class SessionRemoteRepositoryImpl @Inject constructor(
@@ -166,6 +167,7 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                         )
                     })
                 } else {
+                    LoggerUtil.e("HTTP 200이지만 Body가 null입니다.")
                     throw Exception("Body is null")
                 }
             } else {

@@ -29,11 +29,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private var timeJob: Job? = null
     private lateinit var recentFeedbackAdapter: RecentFeedbackRvAdapter
     private val viewModel : GetSessionListViewModel by viewModels()
+    private val getScoresViewModel : GetScoresViewModel by viewModels()
 
     override fun initView() {
 
         setBottomNav()
         viewModel.getSessionList()
+        getScoresViewModel.getScores()
 
         val items = listOf(
             RecentFeedback("발표속도가 너무 빨라요.", "#발표속도"),
@@ -126,6 +128,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 }
                 is UiState.Error -> {
                     showToast("정보 조회에 실패했습니다.")
+                }
+            }
+        }
+
+        getScoresViewModel.getScoresState.observe(viewLifecycleOwner) {
+            when (it) {
+                is UiState.Loading -> {}
+                is UiState.Success -> {
+                    LoggerUtil.d("${it.data}")
+                }
+                is UiState.Error -> {
+                    showToast("점수 조회에 실패했습니다.")
                 }
             }
         }
