@@ -5,6 +5,7 @@ import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
+import com.capstone2.data.model.session.GetScoresResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
 import com.capstone2.data.model.session.SaveScriptRequestDTO
 import com.capstone2.data.model.session.SaveScriptResponseDTO
@@ -47,6 +48,10 @@ class SessionRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun aiAnalysis(sessionId: Int): Response<AiAnalysisResponseDTO> {
         return service.aiAnalysis(getAccessTokenWithPrefix(), sessionId)
+    }
+
+    override suspend fun getScores(): Response<List<GetScoresResponseDTO>> {
+        return service.getScores(getAccessTokenWithPrefix())
     }
 
 

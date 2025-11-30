@@ -6,6 +6,7 @@ import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.domain.model.session.ConnectSession
 import com.capstone2.domain.model.session.ConnectSessionResult
 import com.capstone2.domain.model.session.CreateSession
+import com.capstone2.domain.model.session.GetScoresResult
 import com.capstone2.domain.model.session.GetSessionList
 import com.capstone2.domain.model.session.SaveScript
 import com.capstone2.domain.model.session.SaveScriptResult
@@ -51,9 +52,6 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                             status = it.status,
                             modelVersion = it.modelVersion,
                             title = it.title,
-                            gcsUri = it.gcsUri,
-                            startedAt = it.startedAt,
-                            completedAt = it.completedAt,
                             createdAt = it.createdAt,
                             updatedAt = it.updatedAt
                         )
@@ -141,6 +139,30 @@ class SessionRemoteRepositoryImpl @Inject constructor(
                             speedTimeline = it.speedTimeline.map { speed -> speed.toDomain() },
                             wer = it.wer,
                             wpm = it.wpm
+                        )
+                    })
+                } else {
+                    throw Exception("Body is null")
+                }
+            } else {
+                throw Exception("Request is failure")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getScores(): Result<List<GetScoresResult>> {
+        return try {
+            val response = dataSource.getScores()
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body.map {
+                        GetScoresResult(
+                            date = it.date,
+                            finalScore = it.finalScore,
+                            sessionId = it.sessionId
                         )
                     })
                 } else {

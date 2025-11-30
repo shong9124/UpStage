@@ -6,9 +6,6 @@ data class GetSessionList(
     val status: String,
     val modelVersion: String,
     val title: String,
-    val gcsUri: String,
-    val startedAt: String,
-    val completedAt: String,
     val createdAt: String,
     val updatedAt: String,
 )

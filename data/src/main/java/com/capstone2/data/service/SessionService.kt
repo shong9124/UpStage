@@ -5,6 +5,7 @@ import com.capstone2.data.model.session.ConnectSessionRequestDTO
 import com.capstone2.data.model.session.ConnectSessionResponseDTO
 import com.capstone2.data.model.session.CreateSessionRequestDTO
 import com.capstone2.data.model.session.CreateSessionResponseDTO
+import com.capstone2.data.model.session.GetScoresResponseDTO
 import com.capstone2.data.model.session.GetSessionListResponseDTO
 import com.capstone2.data.model.session.SaveScriptRequestDTO
 import com.capstone2.data.model.session.SaveScriptResponseDTO
@@ -47,4 +48,9 @@ interface SessionService {
         @Header("Authorization") accessToken: String,
         @Path("sessionId") sessionId: Int
     ): Response<AiAnalysisResponseDTO>
+
+    @GET("/sessions/me/scores")
+    suspend fun getScores(
+        @Header("Authorization") accessToken: String
+    ): Response<List<GetScoresResponseDTO>>
 }
