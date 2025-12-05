@@ -35,7 +35,7 @@ class ClientModule {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS) // 연결 타임아웃
-            .readTimeout(60, TimeUnit.SECONDS)    // 응답 대기 타임아웃
+            .readTimeout(180, TimeUnit.SECONDS)    // 응답 대기 타임아웃
             .writeTimeout(30, TimeUnit.SECONDS)   // 요청 쓰기 타임아웃
             .build()
     }
