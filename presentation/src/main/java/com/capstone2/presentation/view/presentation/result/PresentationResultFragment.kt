@@ -18,6 +18,7 @@ import com.capstone2.presentation.view.presentation.upload.AiAnalysisViewModel
 import com.capstone2.util.LoggerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class PresentationResultFragment : BaseFragment<FragmentPresentationResultBinding>() {
@@ -50,9 +51,21 @@ class PresentationResultFragment : BaseFragment<FragmentPresentationResultBindin
                     LoggerUtil.d("분석 결과를 성공적으로 받아왔습니다.")
 
                     // 🌟 AI 분석 결과 (it.data: AiAnalysisResult)를 화면에 표시
-                    // 예: binding.tvScore.text = it.data.scoreMetrics.finalScore.toString()
+//                     예: binding.tvScore.text = it.data.scoreMetrics.finalScore.toString()
                     binding.tvScore.text = it.data.scoreMetrics.finalScore.toInt().toString() + " 점"
-                    binding.tvSpeedInt.text = ((it.data.scoreMetrics.userWpm * 100) / 100).toString()
+                    binding.tvSpeedInt.text = DecimalFormat("0.00").format(it.data.scoreMetrics.baselineWpm)
+                    binding.tvSpeedResult.text = DecimalFormat("0.00").format(it.data.scoreMetrics.userWpm)
+                    binding.tvStabilityInt.text = DecimalFormat("0.00").format(it.data.scoreMetrics.userMeanDeltaPctVsBaseline)
+
+                    if (it.data.scoreMetrics.baselineSpeedVarOkPct > it.data.scoreMetrics.userMeanDeltaPctVsBaseline) {
+                        binding.tvStabilityResult.text = "허용 범위 ${it.data.scoreMetrics.baselineSpeedVarOkPct}이내\\n안정적"
+                    }
+                    else {
+                        binding.tvStabilityResult.text = "허용 범위 ${it.data.scoreMetrics.baselineSpeedVarOkPct}초과\\n교정 필요"
+                    }
+                    binding.tvFeedback1.text = "잉여표현\\n ${it.data.fillersPerMinute}sec/min\\n"
+                    binding.tvFeedback2.text = "발음 정확도\\n ${it.data.pronounceCoverage} %"
+                    binding.tvFeedback3.text = it.data.feedbackMarkdown
 
                     startAnimation()
                 }
